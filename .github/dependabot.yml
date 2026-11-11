@@ -7,7 +7,13 @@ updates:
     commit-message:
       prefix: ci
 
+  - package-ecosystem: pip
+    directory: /ml-service
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+
   # À ajouter quand les fichiers de dépendances existeront :
-  # - pip    (directory: /ml-service) : issue #5, sprint 1
   # - maven  (directory: /backend)    : sprint 2
   # - npm    (directory: /frontend)   : sprint 2-3

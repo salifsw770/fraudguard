@@ -2,7 +2,8 @@
 
 Ce script ne télécharge rien : PaySim se récupère manuellement sur Kaggle
 (aucun identifiant Kaggle n'est nécessaire ni stocké dans le dépôt).
-Il affiche la marche à suivre, puis contrôle le fichier et son nombre de lignes.
+Il contrôle le fichier et son nombre de lignes, et n'affiche la marche à suivre
+qu'en cas d'échec.
 
 Usage :
     python download_data.py
@@ -42,24 +43,26 @@ def compter_lignes(chemin: str | Path) -> int:
     return max(total - 1, 0)
 
 
-def main(chemin: Path = CHEMIN_CSV) -> int:
-    print(INSTRUCTIONS)
+def echec(message: str) -> int:
+    """Affiche l'erreur suivie de la marche à suivre, et renvoie le code d'échec."""
+    print(f"ÉCHEC : {message}\n", file=sys.stderr)
+    print(INSTRUCTIONS, file=sys.stderr)
+    return 1
 
+
+def main(chemin: Path = CHEMIN_CSV) -> int:
     if not chemin.is_file():
-        print(f"ÉCHEC : fichier introuvable : {chemin}", file=sys.stderr)
-        return 1
+        return echec(f"fichier introuvable : {chemin}")
 
     print(f"Fichier trouvé : {chemin}")
     print("Comptage des lignes (quelques secondes)...")
     nb_lignes = compter_lignes(chemin)
 
     if nb_lignes != NB_LIGNES_ATTENDU:
-        print(
-            f"ÉCHEC : {nb_lignes:,} lignes de données, {NB_LIGNES_ATTENDU:,} attendues. "
-            "Le fichier est incomplet ou ce n'est pas PaySim : le télécharger à nouveau.",
-            file=sys.stderr,
+        return echec(
+            f"{nb_lignes:,} lignes de données, {NB_LIGNES_ATTENDU:,} attendues. "
+            "Le fichier est incomplet ou ce n'est pas PaySim : le télécharger à nouveau."
         )
-        return 1
 
     print(f"OK : {nb_lignes:,} lignes de données, le dataset PaySim est complet.")
     return 0

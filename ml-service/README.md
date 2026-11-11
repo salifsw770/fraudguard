@@ -94,11 +94,12 @@ pas d'API Kaggle, pas de `kaggle.json` dans le dépôt.
 python download_data.py
 ```
 
-Le script rappelle la marche à suivre, puis vérifie que le fichier est présent et qu'il contient
+Le script vérifie que le fichier est présent et qu'il contient
 **6 362 620 lignes de données** (en-tête exclu).
 
 - Code de retour `0` : `OK : 6,362,620 lignes de données, le dataset PaySim est complet.`
 - Code de retour `1` : fichier absent, ou nombre de lignes incorrect (téléchargement incomplet).
+  Le script affiche alors la marche à suivre pour récupérer PaySim.
 
 Vérifier aussi que Git ignore bien les données :
 

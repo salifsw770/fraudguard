@@ -89,7 +89,11 @@ cd ml-service && uvicorn app.main:app --reload
 
 ## Comment travailler avec moi
 - Réponds en français, simplement.
-- Pour une tâche importante : propose d'abord un plan court, attends ma validation, puis code.
-- Travaille sur une issue à la fois ; écris les tests en même temps que le code et lance-les.
+- Travaille sur une issue à la fois, **étape par étape** :
+  1. Découpe l'issue en petites tâches (liste numérotée) et présente-la-moi.
+  2. Pour chaque tâche : **plan** (fichiers touchés, choix techniques et pourquoi)
+     → **review** : attends ma validation → **implémentation**.
+  3. Ne passe à la tâche suivante qu'après ma validation de la précédente.
+- Écris les tests en même temps que le code et lance-les.
 - Explique les choix techniques : je dois pouvoir les défendre en entretien.
 - Si une information manque, pose la question au lieu d'inventer.

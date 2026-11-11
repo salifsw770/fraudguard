@@ -3,7 +3,7 @@
 import pandas as pd
 import pytest
 
-from app.donnees import COLONNES_TYPES, charger_paysim
+from app.donnees import COLONNES_TYPES, charger_paysim, nettoyer
 
 EN_TETE = ",".join(COLONNES_TYPES) + "\n"
 LIGNES = [
@@ -60,3 +60,56 @@ def test_charger_paysim_colonne_manquante_leve_une_erreur(tmp_path):
 
     with pytest.raises(ValueError, match="Colonnes manquantes.*nameOrig"):
         charger_paysim(chemin)
+
+
+# --- nettoyer ---------------------------------------------------------------
+
+
+def test_nettoyer_retire_is_flagged_fraud(csv_paysim):
+    propre = nettoyer(charger_paysim(csv_paysim))
+
+    assert "isFlaggedFraud" not in propre.columns
+    assert len(propre.columns) == len(COLONNES_TYPES) - 1
+
+
+def test_nettoyer_retire_les_doublons_exacts(tmp_path):
+    chemin = ecrire(tmp_path, EN_TETE + LIGNES[0] + LIGNES[0] + LIGNES[1])
+
+    assert len(nettoyer(charger_paysim(chemin))) == 2
+
+
+def test_nettoyer_refuse_les_valeurs_manquantes(tmp_path):
+    ligne_incomplete = "1,PAYMENT,,C1,170136.0,160296.36,M1,0.0,0.0,0,0\n"
+    chemin = ecrire(tmp_path, EN_TETE + ligne_incomplete)
+
+    with pytest.raises(ValueError, match=r"Valeurs manquantes : amount \(1\)"):
+        nettoyer(charger_paysim(chemin))
+
+
+def test_nettoyer_conserve_les_soldes_incoherents(csv_paysim):
+    # Ligne 3 (CASH_OUT) : 21182 + 181 ≠ 0 côté destinataire. C'est un signal, pas une erreur.
+    df = charger_paysim(csv_paysim)
+
+    propre = nettoyer(df)
+
+    colonnes_soldes = ["oldbalanceOrg", "newbalanceOrig", "oldbalanceDest", "newbalanceDest"]
+    pd.testing.assert_frame_equal(propre[colonnes_soldes], df[colonnes_soldes])
+
+
+def test_nettoyer_ne_modifie_pas_le_dataframe_recu(csv_paysim):
+    df = charger_paysim(csv_paysim)
+    copie = df.copy()
+
+    nettoyer(df)
+
+    pd.testing.assert_frame_equal(df, copie)
+
+
+def test_parquet_conserve_les_types(csv_paysim, tmp_path):
+    propre = nettoyer(charger_paysim(csv_paysim))
+    chemin = tmp_path / "propre.parquet"
+
+    propre.to_parquet(chemin)
+    relu = pd.read_parquet(chemin)
+
+    pd.testing.assert_frame_equal(relu, propre)

@@ -11,6 +11,7 @@ import pandas as pd
 DOSSIER_DATA = Path(__file__).resolve().parent.parent / "data"
 CHEMIN_CSV_PAYSIM = DOSSIER_DATA / "raw" / "PS_20174392719_1491204439457_log.csv"
 DOSSIER_PROCESSED = DOSSIER_DATA / "processed"
+CHEMIN_PARQUET = DOSSIER_PROCESSED / "paysim_propre.parquet"
 
 # Montants et soldes en float64, pas float32 : le float32 n'a qu'environ 7 chiffres
 # significatifs, les centimes des gros montants seraient perdus et créeraient de fausses
@@ -54,3 +55,23 @@ def charger_paysim(
     if frac is not None:
         df = df.sample(frac=frac, random_state=random_state).sort_index()
     return df
+
+
+def nettoyer(df: pd.DataFrame) -> pd.DataFrame:
+    """Nettoyage minimal de PaySim, décidé à partir du notebook 01_exploration.
+
+    - Refuse les valeurs manquantes (ValueError) plutôt que de les combler en silence.
+    - Retire isFlaggedFraud : c'est la sortie d'une règle existante, pas une donnée de la
+      transaction ; une transaction reçue par l'API ne l'aura pas.
+    - Retire les doublons exacts.
+
+    Tout le reste est conservé volontairement : les soldes incohérents sont un signal de
+    fraude (à ne pas « corriger »), et le choix des types et des variables se fait au notebook 02.
+    Renvoie un nouveau DataFrame ; celui reçu n'est pas modifié.
+    """
+    manquantes = df.isna().sum()
+    if manquantes.any():
+        detail = ", ".join(f"{nom} ({n})" for nom, n in manquantes[manquantes > 0].items())
+        raise ValueError(f"Valeurs manquantes : {detail}")
+
+    return df.drop(columns="isFlaggedFraud").drop_duplicates()

@@ -1,5 +1,12 @@
-# Outils de développement : tests, lint/format, nettoyage des notebooks.
+# Dépendances de développement : production + notebooks, tests, lint/format.
 -r requirements.txt
+
+# Notebooks
+jupyter==1.1.1
+ipykernel==7.4.0
+matplotlib==3.11.2
+
+# Tests et qualité
 pytest==9.2.0
 ruff==0.17.4
 nbstripout==0.9.1

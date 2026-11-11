@@ -54,8 +54,13 @@ pip install -r requirements-dev.txt
 
 | Fichier | Contenu | Usage |
 | --- | --- | --- |
-| `requirements.txt` | pandas, numpy, pyarrow, scikit-learn, xgboost, lightgbm, shap, matplotlib, joblib, jupyter, ipykernel | exécution (image Docker) |
-| `requirements-dev.txt` | `-r requirements.txt` + pytest, ruff, nbstripout | développement et CI |
+| `requirements.txt` | pandas, numpy, pyarrow, scikit-learn, xgboost, lightgbm, shap, joblib | production (image Docker) |
+| `requirements-dev.txt` | `-r requirements.txt` + jupyter, ipykernel, matplotlib (notebooks) + pytest, ruff, nbstripout (tests et qualité) | développement et CI |
+
+Règle : **seul ce qui s'exécute en production va dans `requirements.txt`**. Les notebooks,
+les graphiques et les outils de test ne servent qu'au développement. Les garder hors de
+l'image Docker la rend plus légère, plus rapide à construire, et réduit la surface d'attaque
+(moins de paquets, donc moins de failles possibles à surveiller).
 
 Les versions sont figées (`==`) pour que tout le monde, la CI et Docker aient exactement
 le même environnement. Dependabot propose chaque semaine les mises à jour par pull request.
@@ -130,7 +135,7 @@ Extensions nécessaires : **Python** et **Jupyter** (Microsoft).
 3. Dans un notebook : bouton **Select Kernel** en haut à droite → **Python Environments**
    → `.venv (Python 3.12.x)`.
 
-Si `.venv` n'apparaît pas, vérifier que `ipykernel` est installé (il est dans `requirements.txt`)
+Si `.venv` n'apparaît pas, vérifier que `ipykernel` est installé (il est dans `requirements-dev.txt`)
 puis recharger la fenêtre (`Ctrl+Shift+P` → **Developer: Reload Window**).
 
 ## 8. Commandes utiles

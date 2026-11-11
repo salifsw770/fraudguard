@@ -1,0 +1,16 @@
+# Configuration des outils du service IA (pas de packaging : ce fichier ne sert qu'à Ruff et pytest).
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+# E : erreurs de style PEP 8, F : erreurs Pyflakes (imports inutilisés, noms indéfinis),
+# I : tri des imports, B : bugs fréquents (flake8-bugbear), UP : syntaxe Python moderne.
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Rend importables les modules de ml-service/ (download_data, app) depuis tests/.
+pythonpath = ["."]

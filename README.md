@@ -3,7 +3,7 @@
 Détection de fraude en temps réel sur les transactions mobile money.
 Chaque transaction reçoit un score de risque expliqué en une phrase claire ; un agent bancaire valide ou bloque les transactions suspectes depuis un tableau de bord.
 
-<!-- Badges CI et couverture : ajoutés au fil des sprints -->
+[![ml](https://github.com/salifsw770/fraudguard/actions/workflows/ml.yml/badge.svg)](https://github.com/salifsw770/fraudguard/actions/workflows/ml.yml)
 
 > **Statut :** sprint 1 en cours : données et modèle (release cible `v0.1.0`).
 

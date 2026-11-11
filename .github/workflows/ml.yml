@@ -1,0 +1,47 @@
+# CI du service IA : lint (Ruff) et tests (pytest) à chaque changement de ml-service/.
+name: ml
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ml-service/**"
+      - ".github/workflows/ml.yml"
+  pull_request:
+    paths:
+      - "ml-service/**"
+      - ".github/workflows/ml.yml"
+
+# Moindre privilège : le jeton GITHUB_TOKEN ne peut que lire le code.
+permissions:
+  contents: read
+
+jobs:
+  lint-et-tests:
+    name: lint-et-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ml-service   # s'applique aux étapes « run » uniquement
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"   # entre guillemets : sinon YAML lirait 3.10 comme 3.1
+          cache: pip
+          # Chemin depuis la racine du dépôt (working-directory ne s'applique pas ici).
+          cache-dependency-path: ml-service/requirements*.txt
+
+      - name: Installer les dépendances
+        run: pip install -r requirements-dev.txt
+
+      - name: Ruff (lint)
+        run: ruff check .
+
+      - name: Ruff (formatage)
+        run: ruff format --check .
+
+      - name: Tests
+        run: pytest

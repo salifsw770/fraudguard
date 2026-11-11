@@ -66,15 +66,22 @@ Le dataset n'est pas téléchargé automatiquement et **aucun identifiant Kaggle
 pas d'API Kaggle, pas de `kaggle.json` dans le dépôt.
 
 1. Ouvrir <https://www.kaggle.com/datasets/ealaxi/paysim1> (compte Kaggle gratuit).
-2. Cliquer sur **Download** : on obtient une archive `.zip` (≈ 180 Mo).
-3. Extraire le CSV (≈ 470 Mo) dans `ml-service/data/raw/` sous le nom
-   `PS_20174392719_1491204439457_log.csv`. Si l'archive le nomme autrement
-   (par exemple `paysim.csv`), le renommer.
+2. Cliquer sur **Download** : on obtient une archive `.zip`.
+3. Lister le contenu de l'archive, puis l'extraire dans `data/raw/` (`.venv` activé).
+   Le module `zipfile` de Python fonctionne de la même façon sous Windows et Linux,
+   sans installer `unzip`, et crée le dossier `data/raw/` s'il n'existe pas :
 
-```bash
-mkdir -p data/raw
-unzip -p ~/Downloads/archive.zip paysim.csv > data/raw/PS_20174392719_1491204439457_log.csv
-```
+   ```bash
+   python -m zipfile -l ~/Downloads/archive.zip
+   python -m zipfile -e ~/Downloads/archive.zip data/raw/
+   ```
+
+4. Le script de vérification attend le nom `PS_20174392719_1491204439457_log.csv`.
+   Renommer le CSV extrait **seulement si son nom diffère** (par exemple `paysim.csv`) :
+
+   ```bash
+   mv data/raw/paysim.csv data/raw/PS_20174392719_1491204439457_log.csv
+   ```
 
 ## 5. Vérifier les données
 

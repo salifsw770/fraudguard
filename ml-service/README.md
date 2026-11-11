@@ -139,7 +139,23 @@ Extensions nécessaires : **Python** et **Jupyter** (Microsoft).
 Si `.venv` n'apparaît pas, vérifier que `ipykernel` est installé (il est dans `requirements-dev.txt`)
 puis recharger la fenêtre (`Ctrl+Shift+P` → **Developer: Reload Window**).
 
-## 8. Commandes utiles
+## 8. Notebooks
+
+À exécuter **dans l'ordre** : chaque notebook produit ce dont le suivant a besoin.
+
+| Notebook | Rôle | Produit | Durée / mémoire |
+|---|---|---|---|
+| `01_exploration.ipynb` | Comprendre PaySim : types, montants, soldes, règle `isFlaggedFraud` | `data/processed/paysim_propre.parquet` (~270 Mo) | ~3 min, ~2 Go de RAM |
+
+Exécution complète sans ouvrir l'interface (depuis `ml-service/`, `.venv` activé) :
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace notebooks/01_exploration.ipynb
+```
+
+Le code réutilisé par plusieurs notebooks (chargement, nettoyage) est dans `app/donnees.py`, testé.
+
+## 9. Commandes utiles
 
 ```bash
 pytest                 # tests
@@ -157,5 +173,6 @@ ml-service/
   models/           modèles entraînés
   tests/            tests pytest
   data/raw/         PaySim (non commité)
+  data/processed/   données nettoyées par les notebooks (non commité)
   download_data.py  vérification des données
 ```

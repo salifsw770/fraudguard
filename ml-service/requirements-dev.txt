@@ -1,0 +1,5 @@
+# Outils de développement : tests, lint/format, nettoyage des notebooks.
+-r requirements.txt
+pytest==9.2.0
+ruff==0.17.4
+nbstripout==0.9.1

@@ -1,0 +1,40 @@
+# --- Secrets : jamais commités (seul .env.example l'est) ---
+.env
+.env.*
+!.env.example
+
+# --- Données : jamais commitées (PaySim se télécharge avec download_data.py) ---
+data/
+**/data/
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Java / Maven ---
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# --- Angular / Node ---
+node_modules/
+dist/
+.angular/
+coverage/
+
+# --- Éditeurs et système ---
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/

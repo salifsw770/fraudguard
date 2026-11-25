@@ -2,7 +2,7 @@
 # dans l'image Docker. Les outils de notebook et de test sont dans requirements-dev.txt.
 # Versions figées pour un environnement reproductible ; Dependabot propose les mises à jour.
 pandas==3.1.1
-numpy==2.5.4
+numpy==2.5.5
 pyarrow==26.0.1
 scikit-learn==1.9.1
 xgboost==3.4.1

@@ -8,5 +8,5 @@ matplotlib==3.11.2
 
 # Tests et qualité
 pytest==9.2.0
-ruff==0.17.4
+ruff==0.17.6
 nbstripout==0.9.1
